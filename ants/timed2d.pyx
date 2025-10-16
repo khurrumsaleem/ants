@@ -566,15 +566,14 @@ cdef double[:,:,:,:] multigroup_tr_bdf2(double[:,:,:,:]& flux_ell_x, \
     q_star = tools.array_4d(info.cells_x, info.cells_y, \
                             info.angles * info.angles, info.groups)
     
-    # Initialize scalar flux for previous time step
-    scalar_ell = tools.array_3d(info.cells_x, info.cells_y, info.groups)
-    tools._angular_edge_to_scalar(flux_ell_x, flux_ell_y, \
-                                  scalar_ell, angle_w, info)
-    scalar_gamma = tools.array_3d(info.cells_x, info.cells_y, info.groups)
-    
     # Create angular flux of previous time steps
-    flux_gamma = tools.array_4d(info.cells_x, info.cells_y, \
+    flux_last_gamma = tools.array_4d(info.cells_x, info.cells_y, \
                                info.angles * info.angles, info.groups)
+
+    # Initialize scalar flux for previous time step
+    scalar_flux = tools.array_3d(info.cells_x, info.cells_y, info.groups)
+    tools._angular_edge_to_scalar(flux_ell_x, flux_ell_y, \
+                                  scalar_flux, angle_w, info)
 
     # Initialize array with all scalar flux time steps
     flux_time = tools.array_4d(info.steps, info.cells_x, info.cells_y, info.groups)
@@ -597,21 +596,21 @@ cdef double[:,:,:,:] multigroup_tr_bdf2(double[:,:,:,:]& flux_ell_x, \
         # Crank Nicolson
         ################################################################
         # Update q_star for CN step
-        tools._time_source_star_cn(flux_ell_x, flux_ell_y, scalar_ell, \
+        tools._time_source_star_cn(flux_ell_x, flux_ell_y, scalar_flux, \
                     xs_total, xs_scatter, velocity, q_star, external[qq], \
                     external[qqa], medium_map, delta_x, delta_y, angle_x, \
                     angle_y, 2.0 / gamma, info)
 
         # Solve for the \ell + gamma time step
-        scalar_gamma = mg.multi_group(scalar_gamma, xs_total_v_cn, \
+        scalar_flux[:,:,:] = mg.multi_group(scalar_flux, xs_total_v_cn, \
                             xs_scatter, q_star, boundary_x[bcx], \
                             boundary_y[bcy], medium_map, delta_x, \
                             delta_y, angle_x, angle_y, angle_w, info)
 
         # Create (sigma_s + sigma_f) * phi^{\ell} + Q*
-        tools._time_right_side(q_star, scalar_gamma, xs_scatter, medium_map, info)
+        tools._time_right_side(q_star, scalar_flux, xs_scatter, medium_map, info)
         # Solve for angular flux of \ell + gamma time step
-        flux_gamma = mg._known_source_angular(xs_total_v_cn, q_star, \
+        flux_last_gamma = mg._known_source_angular(xs_total_v_cn, q_star, \
                         boundary_x[bcx], boundary_y[bcy], medium_map, \
                         delta_x, delta_y, angle_x, angle_y, angle_w, info)
 
@@ -619,20 +618,20 @@ cdef double[:,:,:,:] multigroup_tr_bdf2(double[:,:,:,:]& flux_ell_x, \
         # BDF2
         ################################################################
         # Update q_star for BDF2 Step
-        tools._time_source_star_tr_bdf2(flux_ell_x, flux_ell_y, flux_gamma, \
+        tools._time_source_star_tr_bdf2(flux_ell_x, flux_ell_y, flux_last_gamma, \
                             q_star, external[qqb], velocity, gamma, info)
         
         # Solve for the \ell + 1 time step
-        flux_time[step] = mg.multi_group(scalar_ell, xs_total_v_bdf2, \
+        flux_time[step] = mg.multi_group(scalar_flux, xs_total_v_bdf2, \
                                 xs_scatter, q_star, boundary_x[bcxa], \
                                 boundary_y[bcya], medium_map, delta_x, \
                                 delta_y, angle_x, angle_y, angle_w, info)
         
         # Update previous time step
-        scalar_ell[:,:,:] = flux_time[step,:,:,:]
+        scalar_flux[:,:,:] = flux_time[step,:,:,:]
         
         # Create (sigma_s + sigma_f) * phi^{\ell} + Q*
-        tools._time_right_side(q_star, scalar_ell, xs_scatter, medium_map, info)
+        tools._time_right_side(q_star, scalar_flux, xs_scatter, medium_map, info)
         
         # Solve for angular flux of previous time step
         mg._interface_angular(flux_ell_x, flux_ell_y, xs_total_v_bdf2, \
