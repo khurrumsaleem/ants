@@ -20,72 +20,56 @@
 # distutils: language = c++
 # distutils: extra_compile_args = -O3 -march=native -ffast-math
 
+from cython.parallel import prange
 from cython.view cimport array as cvarray
 
-from cython.parallel import prange
-
+from ants.cytools_shared cimport _fission_matrix as _shared_fission_matrix
 from ants.cytools_shared cimport _normalize_flux as _shared_normalize_flux
 from ants.cytools_shared cimport _total_velocity as _shared_total_velocity
 from ants.cytools_shared cimport _update_keffective as _shared_update_keffective
 from ants.cytools_shared cimport angle_convergence as _shared_angle_convergence
+from ants.cytools_shared cimport array_1d as _shared_array_1d
+from ants.cytools_shared cimport array_2d as _shared_array_2d
+from ants.cytools_shared cimport array_3d as _shared_array_3d
+from ants.cytools_shared cimport array_4d as _shared_array_4d
+from ants.cytools_shared cimport array_5d as _shared_array_5d
+from ants.cytools_shared cimport farray_4d as _shared_farray_4d
+from ants.cytools_shared cimport farray_5d as _shared_farray_5d
 from ants.cytools_shared cimport group_convergence as _shared_group_convergence
 from ants.parameters cimport params
 
 
 ################################################################################
-# Memoryview functions
+# Memoryview functions — delegates to cytools_shared
 ################################################################################
 cdef double[:] array_1d(int dim1):
-    dd1 = cvarray((dim1,), itemsize=sizeof(double), format="d")
-    cdef double[:] arr = dd1
-    arr[:] = 0.0
-    return arr
+    return _shared_array_1d(dim1)
 
 
 cdef double[:,:] array_2d(int dim1, int dim2):
-    dd2 = cvarray((dim1, dim2), itemsize=sizeof(double), format="d")
-    cdef double[:,:] arr = dd2
-    arr[:,:] = 0.0
-    return arr
+    return _shared_array_2d(dim1, dim2)
 
 
 cdef double[:,:,:] array_3d(int dim1, int dim2, int dim3):
-    dd3 = cvarray((dim1, dim2, dim3), itemsize=sizeof(double), format="d")
-    cdef double[:,:,:] arr = dd3
-    arr[:,:,:] = 0.0
-    return arr
+    return _shared_array_3d(dim1, dim2, dim3)
 
 
 cdef double[:,:,:,:] array_4d(int dim1, int dim2, int dim3, int dim4):
-    dd4 = cvarray((dim1, dim2, dim3, dim4), itemsize=sizeof(double), format="d")
-    cdef double[:,:,:,:] arr = dd4
-    arr[:,:,:,:] = 0.0
-    return arr
+    return _shared_array_4d(dim1, dim2, dim3, dim4)
 
 
 cdef double[:,:,:,:,:] array_5d(int dim1, int dim2, int dim3, int dim4, \
         int dim5):
-    dd5 = cvarray((dim1, dim2, dim3, dim4, dim5), itemsize=sizeof(double), \
-                    format="d")
-    cdef double[:,:,:,:,:] arr = dd5
-    arr[:,:,:,:,:] = 0.0
-    return arr
+    return _shared_array_5d(dim1, dim2, dim3, dim4, dim5)
 
 
 cdef float[:,:,:,:] farray_4d(int dim1, int dim2, int dim3, int dim4):
-    dd4 = cvarray((dim1, dim2, dim3, dim4), itemsize=sizeof(float), format="f")
-    cdef float[:,:,:,:] arr = dd4
-    arr[:,:,:,:] = 0.0
-    return arr
+    return _shared_farray_4d(dim1, dim2, dim3, dim4)
 
 
 cdef float[:,:,:,:,:] farray_5d(int dim1, int dim2, int dim3, int dim4, \
         int dim5):
-    dd5 = cvarray((dim1, dim2, dim3, dim4, dim5), itemsize=sizeof(float), \
-                    format="d")
-    cdef float[:,:,:,:,:] arr = dd5
-    arr[:,:,:,:,:] = 0.0
-    return arr
+    return _shared_farray_5d(dim1, dim2, dim3, dim4, dim5)
 
 ################################################################################
 # Convergence functions
@@ -640,6 +624,10 @@ cdef void _time_right_side(double[:,:,:,:]& q_star, double[:,:,:]& flux, \
 ################################################################################
 # Criticality functions
 ################################################################################
+
+cdef double[:,:,:] _fission_matrix(object fission, object chi):
+    return _shared_fission_matrix(fission, chi)
+
 
 cdef void _normalize_flux(double[:,:,:]& flux, params info):
     cdef double[:,:,:] _flux = flux

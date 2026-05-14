@@ -145,6 +145,8 @@ cdef double[:,:,:,:] _expand_boundary_y(double[:,:,:,:]& half_bc, \
 ################################################################################
 # Criticality functions
 ################################################################################
+cdef double[:,:,:] _fission_matrix(object fission, object chi)
+
 cdef void _normalize_flux(double[:,:,:]& flux, params info)
 
 cdef void _fission_source(double[:,:,:]& flux, double[:,:,:]& xs_fission, \

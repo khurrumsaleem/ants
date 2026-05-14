@@ -154,6 +154,7 @@ def test_timed_1d_correctness():
     mat_data, sources, geo, quadrature, _ = problems1d.manufactured_ss_03(100, 8)
     time_data = TimeDependentData(steps=5, dt=0.1)
     mat_data.velocity = np.ones(1)
+
     angle_x = quadrature.angle_x
     half_bc = np.stack(
         [
