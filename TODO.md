@@ -3,7 +3,7 @@
 ## Planned Updates for 0.3.0
 - [ ] Implement artificial scattering for ray effect correction (2D).
 - [ ] Add anisotropic scattering support.
-- [ ] Add chi vector support.
+- [x] Add chi vector support.
 - [ ] Add 3D transport sweep capabilities.
 - [x] Add 3D interpolation capabilities.
 - [x] Convert interp1d and interp2d files to Cython.

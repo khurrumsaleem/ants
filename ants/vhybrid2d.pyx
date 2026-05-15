@@ -43,7 +43,7 @@ def time_dependent(materials_u, groups_c, sources, geometry, quadrature_u, \
     # Unpack Python DataTypes to Cython memoryviews
     cdef double[:,:] xs_total_u = materials_u.total
     cdef double[:,:,:] xs_scatter_u = materials_u.scatter
-    cdef double[:,:,:] xs_fission_u = materials_u.fission
+    cdef double[:,:,:] xs_fission_u = tools._fission_matrix(materials_u.fission, materials_u.chi)
     cdef double[:] velocity_u = materials_u.velocity
     cdef double[:,:,:,:,:] external_u = sources.external
     cdef double[:,:,:,:,:] boundary_xu = sources.boundary_x

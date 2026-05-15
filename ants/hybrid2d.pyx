@@ -40,11 +40,11 @@ def time_dependent(materials_u, materials_c, sources, geometry, quadrature_u, \
     # Unpack Python DataTypes to Cython memoryviews
     cdef double[:,:] xs_total_u = materials_u.total
     cdef double[:,:,:] xs_scatter_u = materials_u.scatter
-    cdef double[:,:,:] xs_fission_u = materials_u.fission
+    cdef double[:,:,:] xs_fission_u = tools._fission_matrix(materials_u.fission, materials_u.chi)
     cdef double[:] velocity_u = materials_u.velocity
     cdef double[:,:] xs_total_c = materials_c.total
     cdef double[:,:,:] xs_scatter_c = materials_c.scatter
-    cdef double[:,:,:] xs_fission_c = materials_c.fission
+    cdef double[:,:,:] xs_fission_c = tools._fission_matrix(materials_c.fission, materials_c.chi)
     cdef double[:] velocity_c = materials_c.velocity
     cdef double[:,:,:,:,:] external_u = sources.external
     cdef double[:,:,:,:,:] boundary_xu = sources.boundary_x
@@ -416,11 +416,11 @@ def restart_bdf2(double[:,:,:,:] flux_1, double[:,:,:,:] flux_2, \
     # Unpack Python DataTypes to Cython memoryviews
     cdef double[:,:] xs_total_u = materials_u.total
     cdef double[:,:,:] xs_scatter_u = materials_u.scatter
-    cdef double[:,:,:] xs_fission_u = materials_u.fission
+    cdef double[:,:,:] xs_fission_u = tools._fission_matrix(materials_u.fission, materials_u.chi)
     cdef double[:] velocity_u = materials_u.velocity
     cdef double[:,:] xs_total_c = materials_c.total
     cdef double[:,:,:] xs_scatter_c = materials_c.scatter
-    cdef double[:,:,:] xs_fission_c = materials_c.fission
+    cdef double[:,:,:] xs_fission_c = tools._fission_matrix(materials_c.fission, materials_c.chi)
     cdef double[:] velocity_c = materials_c.velocity
     cdef double[:,:,:,:,:] external_u = sources.external
     cdef double[:,:,:,:,:] boundary_xu = sources.boundary_x

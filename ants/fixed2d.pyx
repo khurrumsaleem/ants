@@ -33,7 +33,7 @@ def fixed_source(materials, sources, geometry, quadrature, solver):
     # Unpack Python DataTypes to Cython memoryviews
     cdef double[:,:] xs_total = materials.total
     cdef double[:,:,:] xs_scatter = materials.scatter
-    cdef double[:,:,:] xs_fission = materials.fission
+    cdef double[:,:,:] xs_fission = tools._fission_matrix(materials.fission, materials.chi)
     cdef double[:,:,:,:] external = sources.external
     cdef double[:,:,:,:] boundary_x = sources.boundary_x
     cdef double[:,:,:,:] boundary_y = sources.boundary_y

@@ -36,7 +36,7 @@ def time_dependent(materials, sources, geometry, quadrature, solver, time_data):
     # Unpack Python DataTypes to Cython memoryviews
     cdef double[:,:] xs_total = materials.total
     cdef double[:,:,:] xs_scatter = materials.scatter
-    cdef double[:,:,:] xs_fission = materials.fission
+    cdef double[:,:,:] xs_fission = tools._fission_matrix(materials.fission, materials.chi)
     cdef double[:] velocity = materials.velocity
     cdef double[:,:,:,:,:] external = sources.external
     cdef double[:,:,:,:,:] boundary_x = sources.boundary_x
@@ -344,7 +344,7 @@ def restart_bdf2(double[:,:,:,:] flux_1, double[:,:,:,:] flux_2, materials, \
     # Unpack Python DataTypes to Cython memoryviews
     cdef double[:,:] xs_total = materials.total
     cdef double[:,:,:] xs_scatter = materials.scatter
-    cdef double[:,:,:] xs_fission = materials.fission
+    cdef double[:,:,:] xs_fission = tools._fission_matrix(materials.fission, materials.chi)
     cdef double[:] velocity = materials.velocity
     cdef double[:,:,:,:,:] external = sources.external
     cdef double[:,:,:,:,:] boundary_x = sources.boundary_x
@@ -463,7 +463,7 @@ def angular_bdf2(int[:] time_steps, double[:,:,:,:] scalar_flux, \
     # Unpack Python DataTypes to Cython memoryviews
     cdef double[:,:] xs_total = materials.total
     cdef double[:,:,:] xs_scatter = materials.scatter
-    cdef double[:,:,:] xs_fission = materials.fission
+    cdef double[:,:,:] xs_fission = tools._fission_matrix(materials.fission, materials.chi)
     cdef double[:] velocity = materials.velocity
     cdef double[:,:,:,:,:] external = sources.external
     cdef double[:,:,:,:,:] boundary_x = sources.boundary_x
