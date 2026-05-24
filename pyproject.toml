@@ -57,6 +57,8 @@ markers = [
     "cylinder2d: Two-dimensional cylinder (circular) problems",
     "dimensions: Check the different dimensions of external and boundary sources",
     "math: test math functions - interpolation, error estimation, etc.",
+    "nearby1d: One-dimensional nearby problems",
+    "nearby2d: Two-dimensional nearby problems",
 ]
 
 [tool.black]

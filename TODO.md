@@ -10,7 +10,7 @@
 - [x] Add parallelism improvements (OpenMP tuning and/or distributed strategy).
 - [ ] Complete spatial MMS verification for remaining unverified methods.
 - [ ] Limit the memory footprint (boundary sources, time-dependent problems, etc.)
-- [ ] Update nearby1d and nearby2d function calls.
+- [x] Update nearby1d and nearby2d function calls.
 
 
 ## Updates for 0.4.0
