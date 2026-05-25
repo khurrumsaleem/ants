@@ -95,9 +95,7 @@ flux_ss = fixed_source(mat_data, ss_sources, geometry, quadrature, solver)
 
 fig, ax = plt.subplots()
 ax.plot(centers_x, flux_ss.flatten(), label="Steady-State", c="k", ls=":")
-ax.plot(
-    centers_x, flux_td[-1, :, 0], label="Time-Dependent (final step)", c="r", alpha=0.6
-)
+ax.plot(centers_x, flux_td[:, 0], label="Time-Dependent (final step)", c="r", alpha=0.6)
 ax.set_title("Reed Problem")
 ax.set_xlabel("Location (cm)")
 ax.set_ylabel("Scalar Flux")

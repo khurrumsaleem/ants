@@ -140,4 +140,3 @@ flux = time_dependent(
     hybrid_data,
 )
 # np.save(f"flux_hybrid_chevron_g{groups_u}g{groups_c}_n{angles_u}n{angles_c}", flux)
-# np.save(f"flux_hybrid_chevron_g{groups_u}g{groups_c}_n{angles_u}n{angles_c}", flux)

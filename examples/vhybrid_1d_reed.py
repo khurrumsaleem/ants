@@ -102,7 +102,7 @@ flux = time_dependent(
 )
 
 fig, ax = plt.subplots()
-ax.plot(centers_x, flux[-1, :, 0], label="Last Time Step", c="r", alpha=0.6)
+ax.plot(centers_x, flux[:, 0], label="Last Time Step", c="r", alpha=0.6)
 ax.set_title("Reed Problem - Vectorized Hybrid Method")
 ax.set_xlabel("Location (cm)")
 ax.set_ylabel("Scalar Flux")
