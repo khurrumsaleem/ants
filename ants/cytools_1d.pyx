@@ -36,7 +36,7 @@ from ants.parameters cimport params
 
 
 ################################################################################
-# Memoryview functions — delegates to cytools_shared
+# Memoryview functions -- delegates to cytools_shared
 ################################################################################
 cdef double[:] array_1d(int dim1):
     return _shared_array_1d(dim1)
@@ -680,8 +680,8 @@ cdef double[:,:,:] _expand_boundary_x(double[:,:,:]& half_bc,
     # Expand a half-angle (or broadcast) boundary array into a full-angle
     # boundary array with shape (2, angles, groups).
     #
-    # half_bc may have shape (2, angles//2, groups) — per-incoming-angle, or
-    # (2, 1, groups) / (2, 1, 1) — broadcast (same value for all angles).
+    # half_bc may have shape (2, angles//2, groups) -- per-incoming-angle, or
+    # (2, 1, groups) / (2, 1, 1) -- broadcast (same value for all angles).
     # The angle and group dimensions are each independently broadcast when
     # their size is 1.
     #

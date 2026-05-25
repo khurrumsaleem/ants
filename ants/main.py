@@ -67,7 +67,7 @@ def angular_xy(angles, bc_x=[0, 0], bc_y=[0, 0], datatype=True):
     """Compute 2D product quadrature angles and weights for slab geometry.
 
     Builds a Legendre * Chebyshev product quadrature set, keeps only the
-    N² directions with positive polar cosine (upper hemisphere), and
+    N**2 directions with positive polar cosine (upper hemisphere), and
     reorders them to satisfy reflective boundary conditions.
 
     Parameters
@@ -117,8 +117,9 @@ def artificial_scatter_matrix(angle_x, angle_y, angle_w, sigma_as, beta):
     "Ray Effect Mitigation for the Discrete Ordinates Method Using Artificial
     Scattering", Nuclear Science and Engineering.
 
-    The kernel is s_ε(μ) = (2 / (√π ε Erf(2/ε))) * exp(-(1 - μ)² / ε²)
-    with ε = β / N_q, where N_q is the number of ordinates.
+    The kernel is s_eps(mu) = (2 / (sqrt(pi) * eps * Erf(2/eps)))
+                                * exp(-(1 - mu)**2 / eps**2)
+    with eps = beta / N_q, where N_q is the number of ordinates.
 
     Parameters
     ----------
@@ -169,7 +170,7 @@ def _product_quadrature(angles):
 
     Uses Gauss-Legendre points for the polar cosine (z-direction, mu) and
     Chebyshev points for the azimuthal angle (mapped to x/y direction cosines
-    eta/xi). Each (mu, phi) pair gives ±phi, producing 2*angles² directions
+    eta/xi). Each (mu, phi) pair gives +/-phi, producing 2*angles**2 directions
     covering the full sphere before filtering to the upper hemisphere.
 
     Parameters

@@ -27,7 +27,7 @@ from ants cimport cytools_1d as tools
 from ants.parameters cimport params
 
 ########################################################################
-# Iterative Sweep – Slab Geometry
+# Iterative Sweep - Slab Geometry
 #
 # The angle loop is parallelized with OpenMP via prange.  Each angle
 # writes to its own private row of flux_private (shape: angles * cells),

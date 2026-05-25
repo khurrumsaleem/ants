@@ -469,7 +469,7 @@ def _rand_svd(A, k):
 
     Complexity vs exact SVD (both O(n * m^2)):
       - Equal cost when k == m (full rank target, sketch fills all columns).
-      - Speedup ≈ m / (k + oversampling) when k << m, i.e. when the energy
+      - Speedup ~= m / (k + oversampling) when k << m, i.e. when the energy
         threshold truncates most of the K-1 snapshot columns.
     """
     n, m = A.shape

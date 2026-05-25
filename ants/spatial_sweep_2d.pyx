@@ -19,16 +19,18 @@
 # distutils: language = c++
 # distutils: extra_compile_args = -O3 -march=native -ffast-math
 
+from libc.math cimport tanh
+
 from cython.parallel import prange, threadid
 
 from ants cimport cytools_2d as tools
 from ants.parameters cimport params
 
 ########################################################################
-# Iterative Sweep – Square Geometry
+# Iterative Sweep - Square Geometry
 #
-# The angle loop over N² discrete ordinates is parallelized with OpenMP
-# via prange.  Each angle writes to its own private (I×J) flux array,
+# The angle loop over N**2 discrete ordinates is parallelized with OpenMP
+# via prange.  Each angle writes to its own private (I*J) flux array,
 # avoiding race conditions on the shared scalar flux.  The reflector
 # arrays (reflected_x, reflected_y) are read-only inside prange and
 # updated sequentially afterward, exactly as in the 1D case.
@@ -69,7 +71,7 @@ cdef void square_ordinates(double[:,:]& flux, double[:,:]& flux_old, \
     # thrashing that dominates runtime when N2 is large.
     thread_flux = tools.array_3d(info.num_threads, info.cells_x, info.cells_y)
 
-    # Reflector arrays – read-only inside prange, updated sequentially below.
+    # Reflector arrays - read-only inside prange, updated sequentially below.
     reflected_y = tools.array_3d(2, info.cells_x, N2)
     reflected_x = tools.array_3d(2, info.cells_y, N2)
 
@@ -89,7 +91,7 @@ cdef void square_ordinates(double[:,:]& flux, double[:,:]& flux_old, \
         thread_flux[:, :, :] = 0.0
 
         # Initialize per-angle known-edge work arrays from boundary/reflector
-        # arrays (sequential – reads reflected_x/y).
+        # arrays (sequential - reads reflected_x/y).
         for nn in range(N2):
             bcx = 0 if boundary_x.shape[2] == 1 else nn
             bcy = 0 if boundary_y.shape[2] == 1 else nn
@@ -249,22 +251,38 @@ cdef double square_forward_x(double[:,:]& flux, double[:,:]& flux_old, \
     cdef float alpha = spatial_coef(info.spatial)
     cdef float alpha_x = 2.0 / (1.0 + alpha)
 
+    # Step Characteristic per-cell variables
+    cdef double tau_x, tau_y, W_x, W_y, coef_y_eff
+
     # Iterate over X spatial cells
     for ii in range(info.cells_x):
         mat = medium_map[ii, jj]
         coef_x = (alpha_x * angle_x / delta_x[ii])
 
+        if info.spatial == 3:
+            # coef_x and coef_y are base coefficients (alpha==1) for spatial==3
+            tau_x = xs_total[mat] / coef_x
+            W_x = 1.0 / tanh(0.5 * tau_x) - 2.0 / tau_x
+            coef_x = 2.0 / (1.0 + W_x) * coef_x
+            tau_y = xs_total[mat] / coef_y
+            W_y = 1.0 / tanh(0.5 * tau_y) - 2.0 / tau_y
+            coef_y_eff = 2.0 / (1.0 + W_y) * coef_y
+        else:
+            W_x = alpha
+            W_y = alpha
+            coef_y_eff = coef_y
+
         # Calculate flux center
-        center = (coef_x * edge_x + coef_y * edge_y[ii] + xs_scatter[mat] \
+        center = (coef_x * edge_x + coef_y_eff * edge_y[ii] + xs_scatter[mat] \
                     * flux_old[ii, jj] + external[ii, jj] + off_scatter[ii, jj]) \
-                    / (xs_total[mat] + coef_x + coef_y)
+                    / (xs_total[mat] + coef_x + coef_y_eff)
 
         # Update flux with cell centers
         flux[ii, jj] += angle_w * center
 
         # Update known flux
-        edge_x = (2.0 * center - (1.0 - alpha) * edge_x) / (1.0 + alpha)
-        edge_y[ii] = (2.0 * center - (1.0 - alpha) * edge_y[ii]) / (1.0 + alpha)
+        edge_x = (2.0 * center - (1.0 - W_x) * edge_x) / (1.0 + W_x)
+        edge_y[ii] = (2.0 * center - (1.0 - W_y) * edge_y[ii]) / (1.0 + W_y)
 
     return edge_x
 
@@ -284,22 +302,38 @@ cdef double square_backward_x(double[:,:]& flux, double[:,:]& flux_old, \
     cdef double alpha = spatial_coef(info.spatial)
     cdef double alpha_x = 2.0 / (1.0 + alpha)
 
+    # Step Characteristic per-cell variables
+    cdef double tau_x, tau_y, W_x, W_y, coef_y_eff
+
     # Iterate over X spatial cells
     for ii in range(info.cells_x-1, -1, -1):
         mat = medium_map[ii, jj]
         coef_x = (-alpha_x * angle_x / delta_x[ii])
 
+        if info.spatial == 3:
+            # coef_x = -angle_x/dx > 0 (angle_x < 0 in backward); coef_y is base
+            tau_x = xs_total[mat] / coef_x
+            W_x = 1.0 / tanh(0.5 * tau_x) - 2.0 / tau_x
+            coef_x = 2.0 / (1.0 + W_x) * coef_x
+            tau_y = xs_total[mat] / coef_y
+            W_y = 1.0 / tanh(0.5 * tau_y) - 2.0 / tau_y
+            coef_y_eff = 2.0 / (1.0 + W_y) * coef_y
+        else:
+            W_x = alpha
+            W_y = alpha
+            coef_y_eff = coef_y
+
         # Calculate flux center
-        center = (coef_x * edge_x + coef_y * edge_y[ii] + xs_scatter[mat] \
+        center = (coef_x * edge_x + coef_y_eff * edge_y[ii] + xs_scatter[mat] \
                     * flux_old[ii, jj] + external[ii, jj] + off_scatter[ii, jj]) \
-                    / (xs_total[mat] + coef_x + coef_y)
+                    / (xs_total[mat] + coef_x + coef_y_eff)
 
         # Update flux with cell centers
         flux[ii, jj] += angle_w * center
 
         # Update known flux
-        edge_x = (2.0 * center - (1.0 - alpha) * edge_x) / (1.0 + alpha)
-        edge_y[ii] = (2.0 * center - (1.0 - alpha) * edge_y[ii]) / (1.0 + alpha)
+        edge_x = (2.0 * center - (1.0 - W_x) * edge_x) / (1.0 + W_x)
+        edge_y[ii] = (2.0 * center - (1.0 - W_y) * edge_y[ii]) / (1.0 + W_y)
 
     return edge_x
 
@@ -525,6 +559,9 @@ cdef double interface_forward_x(double[:]& flux_edge_x, double[:]& flux_edge_y, 
     cdef float alpha = spatial_coef(info.spatial)
     cdef float alpha_x = 2.0 / (1.0 + alpha)
 
+    # Step Characteristic per-cell variables
+    cdef double tau_x, tau_y, W_x, W_y, coef_y_eff
+
     # Start with initial edge (i-1/2, j)
     flux_edge_x[0] += angle_w * edge_x
 
@@ -533,16 +570,28 @@ cdef double interface_forward_x(double[:]& flux_edge_x, double[:]& flux_edge_y, 
         mat = medium_map[ii]
         coef_x = (alpha_x * angle_x / delta_x[ii])
 
+        if info.spatial == 3:
+            tau_x = xs_total[mat] / coef_x
+            W_x = 1.0 / tanh(0.5 * tau_x) - 2.0 / tau_x
+            coef_x = 2.0 / (1.0 + W_x) * coef_x
+            tau_y = xs_total[mat] / coef_y
+            W_y = 1.0 / tanh(0.5 * tau_y) - 2.0 / tau_y
+            coef_y_eff = 2.0 / (1.0 + W_y) * coef_y
+        else:
+            W_x = alpha
+            W_y = alpha
+            coef_y_eff = coef_y
+
         # Calculate flux center
-        center = (coef_x * edge_x + coef_y * edge_y[ii] + external[ii]) \
-                    / (xs_total[mat] + coef_x + coef_y)
+        center = (coef_x * edge_x + coef_y_eff * edge_y[ii] + external[ii]) \
+                    / (xs_total[mat] + coef_x + coef_y_eff)
 
         # Update flux_edge_y (i, j-1/2)
         flux_edge_y[ii] += angle_w * edge_y[ii]
 
         # Update known flux
-        edge_x = (2.0 * center - (1.0 - alpha) * edge_x) / (1.0 + alpha)
-        edge_y[ii] = (2.0 * center - (1.0 - alpha) * edge_y[ii]) / (1.0 + alpha)
+        edge_x = (2.0 * center - (1.0 - W_x) * edge_x) / (1.0 + W_x)
+        edge_y[ii] = (2.0 * center - (1.0 - W_y) * edge_y[ii]) / (1.0 + W_y)
 
         # Update flux_edge_x (i+1/2, j)
         flux_edge_x[ii+1] += angle_w * edge_x
@@ -563,6 +612,9 @@ cdef double interface_backward_x(double[:]& flux_edge_x, double[:]& flux_edge_y,
     cdef float alpha = spatial_coef(info.spatial)
     cdef float alpha_x = 2.0 / (1.0 + alpha)
 
+    # Step Characteristic per-cell variables
+    cdef double tau_x, tau_y, W_x, W_y, coef_y_eff
+
     # Start with initial edge (i+1/2, j)
     flux_edge_x[info.cells_x] += angle_w * edge_x
 
@@ -571,16 +623,28 @@ cdef double interface_backward_x(double[:]& flux_edge_x, double[:]& flux_edge_y,
         mat = medium_map[ii]
         coef_x = (-alpha_x * angle_x / delta_x[ii])
 
+        if info.spatial == 3:
+            tau_x = xs_total[mat] / coef_x
+            W_x = 1.0 / tanh(0.5 * tau_x) - 2.0 / tau_x
+            coef_x = 2.0 / (1.0 + W_x) * coef_x
+            tau_y = xs_total[mat] / coef_y
+            W_y = 1.0 / tanh(0.5 * tau_y) - 2.0 / tau_y
+            coef_y_eff = 2.0 / (1.0 + W_y) * coef_y
+        else:
+            W_x = alpha
+            W_y = alpha
+            coef_y_eff = coef_y
+
         # Calculate flux center
-        center = (coef_x * edge_x + coef_y * edge_y[ii] + external[ii]) \
-                    / (xs_total[mat] + coef_x + coef_y)
+        center = (coef_x * edge_x + coef_y_eff * edge_y[ii] + external[ii]) \
+                    / (xs_total[mat] + coef_x + coef_y_eff)
 
         # Update flux_edge_y (i, j-1/2)
         flux_edge_y[ii] += angle_w * edge_y[ii]
 
         # Update known flux
-        edge_x = (2.0 * center - (1.0 - alpha) * edge_x) / (1.0 + alpha)
-        edge_y[ii] = (2.0 * center - (1.0 - alpha) * edge_y[ii]) / (1.0 + alpha)
+        edge_x = (2.0 * center - (1.0 - W_x) * edge_x) / (1.0 + W_x)
+        edge_y[ii] = (2.0 * center - (1.0 - W_y) * edge_y[ii]) / (1.0 + W_y)
 
         # Update flux_edge_x to (i-1/2, j)
         flux_edge_x[ii] += angle_w * edge_x

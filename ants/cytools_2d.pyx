@@ -40,7 +40,7 @@ from ants.parameters cimport params
 
 
 ################################################################################
-# Memoryview functions — delegates to cytools_shared
+# Memoryview functions -- delegates to cytools_shared
 ################################################################################
 cdef double[:] array_1d(int dim1):
     return _shared_array_1d(dim1)
@@ -331,7 +331,7 @@ cdef int _reflected_index(double[:]& angle_opp, double[:]& angle_sim, \
 
 cdef void _build_art_source(double[:,:,:]& psi_angular, double[:,:]& M_as, \
         double[:,:,:,:]& art_source, params info):
-    """Build artificial scatter source: art_source[i,j,n,g] = Σ_m M_as[n,m] * psi[i,j,m,g]"""
+    """Build artificial scatter source: art_source[i,j,n,g] = sum_m M_as[n,m] * psi[i,j,m,g]"""
     # Initialize iterables
     cdef int ii, jj, nn, mm, gg
     cdef int N_angles = info.angles * info.angles
@@ -348,7 +348,7 @@ cdef void _build_art_source(double[:,:,:]& psi_angular, double[:,:]& M_as, \
 
 cdef double _angular_flux_change(double[:,:,:]& psi_new, double[:,:,:]& psi_old, \
         params info):
-    """Compute L∞ norm change in angular flux for convergence check"""
+    """Compute L-inf norm change in angular flux for convergence check"""
     cdef int ii, jj, nn
     cdef double max_change = 0.0
     cdef double change
@@ -1217,9 +1217,9 @@ cdef void _vhybrid_source_total(double[:,:,:]& flux_u, double[:,:,:]& flux_c, \
 cdef double[:,:,:,:] _expand_boundary_x(double[:,:,:,:]& half_bc,
         double[:]& angle_x, params info):
     # Expand a half-angle (or broadcast) x-boundary array into a full-angle
-    # x-boundary array with shape (2, cells_y, angles², groups).
+    # x-boundary array with shape (2, cells_y, angles**2, groups).
     #
-    # half_bc may have shape (2, cells_y, angles²//2, groups) — per-incoming-
+    # half_bc may have shape (2, cells_y, angles**2//2, groups) -- per-incoming-
     # angle, or any dimension may be 1 for broadcasting.
     #
     # half_bc angle layout:
@@ -1254,9 +1254,9 @@ cdef double[:,:,:,:] _expand_boundary_x(double[:,:,:,:]& half_bc,
 cdef double[:,:,:,:] _expand_boundary_y(double[:,:,:,:]& half_bc,
         double[:]& angle_y, params info):
     # Expand a half-angle (or broadcast) y-boundary array into a full-angle
-    # y-boundary array with shape (2, cells_x, angles², groups).
+    # y-boundary array with shape (2, cells_x, angles**2, groups).
     #
-    # half_bc may have shape (2, cells_x, angles²//2, groups) — per-incoming-
+    # half_bc may have shape (2, cells_x, angles**2//2, groups) -- per-incoming-
     # angle, or any dimension may be 1 for broadcasting.
     #
     # half_bc angle layout:

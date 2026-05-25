@@ -74,7 +74,7 @@ def _solver_nt(n=N_CPUS, parallel=ParallelType.ANGLE):
 
 
 ########################################################################
-# Correctness – 1D slab fixed source
+# Correctness - 1D slab fixed source
 ########################################################################
 
 SPATIAL = [1, 2, 3]
@@ -99,7 +99,7 @@ def test_slab_correctness(spatial):
 
 
 ########################################################################
-# Correctness – 1D sphere fixed source
+# Correctness - 1D sphere fixed source
 ########################################################################
 
 
@@ -123,7 +123,7 @@ def test_sphere_correctness(spatial):
 
 
 ########################################################################
-# Correctness – 2D slab fixed source
+# Correctness - 2D slab fixed source
 ########################################################################
 
 
@@ -144,7 +144,7 @@ def test_2d_correctness():
 
 
 ########################################################################
-# Correctness – 1D time-dependent slab
+# Correctness - 1D time-dependent slab
 ########################################################################
 
 
@@ -181,7 +181,7 @@ def test_timed_1d_correctness():
 
 
 ########################################################################
-# Correctness – num_threads=0 resolves to all CPUs without error
+# Correctness - num_threads=0 resolves to all CPUs without error
 ########################################################################
 
 
@@ -202,7 +202,7 @@ def test_zero_threads_default():
 
 
 ########################################################################
-# Speedup tests – skipped when only 1 CPU is available
+# Speedup tests - skipped when only 1 CPU is available
 ########################################################################
 
 
@@ -241,7 +241,7 @@ def test_slab_speedup():
     t_parallel = _tmin(solver_n)
 
     speedup = t_serial / t_parallel
-    # Require at least 1.5× speedup when multiple CPUs are available.
+    # Require at least 1.5x speedup when multiple CPUs are available.
     # This is intentionally modest to stay robust across CI environments.
     assert speedup >= 1.5, (
         f"Slab parallel speedup {speedup:.2f}× is below 1.5× threshold "
@@ -255,7 +255,7 @@ def test_slab_speedup():
 )
 def test_2d_speedup():
     """Multi-threaded 2D sweep is faster than single-threaded on a large problem."""
-    N_ANGLES = 8  # N² = 64 discrete ordinates
+    N_ANGLES = 8  # N**2 = 64 discrete ordinates
     mat_data, sources, geo, quadrature, _, _, _ = problems2d.manufactured_ss_01(
         120, N_ANGLES
     )
@@ -290,7 +290,7 @@ def test_2d_speedup():
 
 
 ########################################################################
-# Group-level parallelism – correctness and speedup
+# Group-level parallelism - correctness and speedup
 ########################################################################
 
 
@@ -420,7 +420,7 @@ def test_multigroup_1d_speedup():
 
 
 ########################################################################
-# Energy grid – requires ENERGY_GRID_NPZ secret
+# Energy grid - requires ENERGY_GRID_NPZ secret
 ########################################################################
 
 

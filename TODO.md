@@ -8,7 +8,7 @@
 - [x] Add 3D interpolation capabilities.
 - [x] Convert interp1d and interp2d files to Cython.
 - [x] Add parallelism improvements (OpenMP tuning and/or distributed strategy).
-- [ ] Complete spatial MMS verification for remaining unverified methods.
+- [x] Complete spatial MMS verification for remaining unverified methods.
 - [ ] Limit the memory footprint (boundary sources, time-dependent problems, etc.)
 - [x] Update nearby1d and nearby2d function calls.
 
@@ -30,5 +30,5 @@
 - [ ] Add Generalized Minimal Residual (GMRES) Acceleration.
 - [ ] Add banded triangular meshes (2D).
 - [ ] Implement discontinuous Galerkin spatial discretization (1D/2D).
-- [ ] Add Step Characteristic spatial discretization support for 2D.
+- [x] Add Step Characteristic spatial discretization support for 2D.
 - [ ] Add Neutron depletion calculations.
