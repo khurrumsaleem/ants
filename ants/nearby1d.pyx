@@ -324,8 +324,8 @@ cdef void _angular_curve_fit_impl(double[:,:,:]& flux, \
             tools._nearby_flux_to_scalar(curve_fit, spline, angle_w[nn], gg, info)
 
             # Interpolate x boundary
-            boundary_x[0,nn,gg] = approx.interpolate(bound_edges[0])
-            boundary_x[1,nn,gg] = approx.interpolate(bound_edges[info.cells_x])
+            boundary_x[0,nn,gg] = approx.interpolate(bound_edges[0])[0]
+            boundary_x[1,nn,gg] = approx.interpolate(bound_edges[info.cells_x])[0]
 
             # Calculate integrals
             if center_knots:
@@ -411,8 +411,8 @@ cdef void _scalar_curve_fit_residual(double[:,:,:]& flux, double[:,:]& curve_fit
             tools._nearby_flux_to_scalar(curve_fit, spline, angle_w[nn], gg, info)
 
             # Accumulate scalar boundary (angle-weighted sum)
-            boundary_x[0,gg] += approx.interpolate(edges_x[0]) * angle_w[nn]
-            boundary_x[1,gg] += approx.interpolate(edges_x[info.cells_x]) * angle_w[nn]
+            boundary_x[0,gg] += approx.interpolate(edges_x[0])[0] * angle_w[nn]
+            boundary_x[1,gg] += approx.interpolate(edges_x[info.cells_x])[0] * angle_w[nn]
 
             # Compute cell integrals and accumulate into int_scalar
             int_psi, int_dx = approx.integrate_centers(edges_x)
