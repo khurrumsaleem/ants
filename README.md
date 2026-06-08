@@ -73,7 +73,7 @@ pre-commit run --all-files
 
 ### Build docs locally
 ```bash
-python -m pip install sphinx sphinxcontrib-bibtex
+python -m pip install sphinx sphinxcontrib-bibtex sphinxcontrib-tikz
 make -C docs html
 ```
 

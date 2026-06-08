@@ -59,54 +59,123 @@ and returned as a ``QuadratureData`` object:
 .. autofunction:: ants.angular_xy
 
 
-Source and Boundary Data
-------------------------
+External Source Data
+--------------------
 
-External sources and boundary conditions are passed inside a ``SourceData`` object.
-Arrays are broadcast automatically along dimensions of size 1, so it is not necessary
-to match the full ``(I, N, G)`` shape — a shape of ``(I, 1, 1)`` is sufficient for
-a spatially varying, angle- and energy-independent source.
+External sources (``external``) are passed inside a ``SourceData`` object. The external 
+source can be angular, energy, and time dependent. Arrays are broadcast automatically 
+along dimensions of size 1, so it is not necessary to match the full shape if is is an 
+angle-,  energy-, or time-dependent source. The minimum broadcasting shapes for 1D and 2D
+problems are provided below. 
 
-**One-Dimensional shapes:**
+**External Source Shapes:**
 
 .. list-table::
+   :widths: 15 25 25 35
    :header-rows: 1
 
-   * - Field
+   * - Ndim
+     - Problem Type
      - Minimum broadcast shape
      - Full shape
-   * - ``external`` (fixed/critical)
+   * - 1
+     - Fixed/Critical
      - ``(I, 1, 1)``
      - ``(I, N, G)``
-   * - ``external`` (time-dependent)
+   * - 1
+     - Time-Dependent
      - ``(1, I, 1, 1)``
      - ``(T, I, N, G)``
-   * - ``boundary_x`` (fixed/critical)
-     - ``(2, 1, 1)``
-     - ``(2, N, G)``
-   * - ``boundary_x`` (time-dependent)
-     - ``(T, 2, 1, 1)``
-     - ``(T, 2, N, G)``
+   * - 2  
+     - Fixed/Critical
+     - ``(I, J, 1, 1)``
+     - ``(I, J, N**2, G)``
+   * - 2
+     - Time-Dependent
+     - ``(1, I, J, 1, 1)``
+     - ``(T, I, J, N**2, G)``
 
-**Two-Dimensional shapes:**
+
+Boundary Source Data
+--------------------
+
+Like the external source, the boundary source terms ``boundary_x`` and ``boundary_y``, 
+are passed inside the ``SourceData`` object. The boundary source requires at least 2 values
+for each boundary term (e.g. [x(0), x(X)]). The boundary sources are able to be space- 
+(for 2D), angle-, energy-, and time-dependent. The minimum broadcasting shapes are shown
+in the table below. Figures showing the locations of the boundary sources are also included.
+
+
+**Boundary Source Shapes:**
 
 .. list-table::
+   :widths: 20 22 25 33
    :header-rows: 1
 
-   * - Field
+   * - Ndim/Variable
+     - Problem Type
      - Minimum broadcast shape
      - Full shape
-   * - ``external`` (fixed/critical)
-     - ``(I, J, 1, 1)``
-     - ``(I, J, N^2, G)``
-   * - ``external`` (time-dependent)
-     - ``(1, I, J, 1, 1)``
-     - ``(T, I, J, N^2, G)``
-   * - ``boundary_x``
-     - ``(T, 2, 1, 1, 1)``
-     - ``(T, 2, J, N^2, G)``
-   * - ``boundary_y``
-     - ``(T, 2, 1, 1, 1)``
-     - ``(T, 2, I, N^2, G)``
+   * - 1 / ``boundary_x``
+     - Fixed/Critical
+     - ``(2, 1, 1)``
+     - ``(2, N, G)``
+   * - 1 / ``boundary_x``
+     - Time-Dependent
+     - ``(1, 2, 1, 1)``
+     - ``(T, I, N, G)``
+   * - 2 / ``boundary_x``
+     - Fixed/Critical
+     - ``(2, 1, 1, 1)``
+     - ``(2, J, N**2, G)``
+   * - 2 / ``boundary_x``
+     - Time-Dependent
+     - ``(1, 2, 1, 1, 1)``
+     - ``(T, 2, J, N**2, G)``
+   * - 2 / ``boundary_y``
+     - Fixed/Critical
+     - ``(2, 1, 1, 1)``
+     - ``(2, I, N**2, G)``
+   * - 2 / ``boundary_y``
+     - Time-Dependent
+     - ``(1, 2, 1, 1, 1)``
+     - ``(T, 2, I, N**2, G)``
+
+
+**One-Dimensional Boundary Source**
+
+.. container:: clickable-tikz
+
+    .. tikz:: 
+        :libs: positioning,arrows.meta
+        :include: tikz/boundary-1d.tikz
+        :xscale: 100
+
+**Two-Dimensional Boundary Source**
+
+.. container:: clickable-tikz
+
+    .. tikz:: 
+        :libs: positioning,arrows.meta
+        :include: tikz/boundary-2d.tikz
+        :xscale: 100
+
+**Three-Dimensional Boundary Source**
+
+.. container:: clickable-tikz
+
+    .. tikz:: 
+        :libs: positioning,arrows.meta
+        :include: tikz/boundary-3d.tikz
+        :xscale: 100
+
+
+Time-Dependent Initial Flux
+---------------------------
 
 For initial flux shapes (time-dependent problems), see :doc:`time-dependent-inputs`.
+
+
+.. raw:: html
+    :file: ../functions/tikz-click-handler.html
+

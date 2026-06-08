@@ -18,11 +18,11 @@
 # -- Project information -----------------------------------------------------
 
 project = "ANTS"
-copyright = "2022, Ben Whewell"
+copyright = "2026, Ben Whewell"
 author = "Ben Whewell"
 
 # The full version, including alpha/beta/rc tags
-release = "1.0"
+release = "0.1.0"
 
 
 # -- General configuration ---------------------------------------------------
@@ -33,6 +33,7 @@ release = "1.0"
 extensions = [
     "sphinx.ext.mathjax",
     "sphinxcontrib.bibtex",
+    "sphinxcontrib.tikz",
     "sphinx.ext.autodoc",
     "sphinx.ext.viewcode",
     "sphinx.ext.doctest",
@@ -56,12 +57,9 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 #
 html_theme = "agogo"
 html_theme_options = {
-    # "relbarbgcolor": "black",
-    "body_max_width": "auto",
-    "rightsidebar": "False",
+    "body_max_width": "none",
+    "rightsidebar": False,
 }
-
-# pygments_style = "sphinx"
 
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -69,3 +67,11 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 html_css_files = ["basic.css"]
+
+
+latex_elements = {
+    "preamble": r"""
+    \usepackage{tikz}
+    \usepackage{tikzscale}
+    """,
+}
