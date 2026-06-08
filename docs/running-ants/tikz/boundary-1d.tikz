@@ -9,7 +9,7 @@
     \node at (3, -0.5) {$i = 2$};
     \node at (5, -0.5) {$\cdots$};
     \node at (19, -0.5) {$i = I$};
-        
+
     \draw[->,>=stealth, ultra thick] (0.25, 0.75) -- (2, 0.75) node [pos=1, right] {\texttt{boundary\_x[0]}};
     \draw[->,>=stealth, ultra thick] (19.75, 0.75) -- (18, 0.75) node [pos=1, left] {\texttt{boundary\_x[1]}};
     \node at (10, -1.5) {\Large \texttt{boundary\_x = (2, N, G)}};

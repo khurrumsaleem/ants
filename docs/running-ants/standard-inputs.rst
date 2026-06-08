@@ -62,11 +62,11 @@ and returned as a ``QuadratureData`` object:
 External Source Data
 --------------------
 
-External sources (``external``) are passed inside a ``SourceData`` object. The external 
-source can be angular, energy, and time dependent. Arrays are broadcast automatically 
-along dimensions of size 1, so it is not necessary to match the full shape if is is an 
+External sources (``external``) are passed inside a ``SourceData`` object. The external
+source can be angular, energy, and time dependent. Arrays are broadcast automatically
+along dimensions of size 1, so it is not necessary to match the full shape if is is an
 angle-,  energy-, or time-dependent source. The minimum broadcasting shapes for 1D and 2D
-problems are provided below. 
+problems are provided below.
 
 **External Source Shapes:**
 
@@ -86,7 +86,7 @@ problems are provided below.
      - Time-Dependent
      - ``(1, I, 1, 1)``
      - ``(T, I, N, G)``
-   * - 2  
+   * - 2
      - Fixed/Critical
      - ``(I, J, 1, 1)``
      - ``(I, J, N**2, G)``
@@ -99,9 +99,9 @@ problems are provided below.
 Boundary Source Data
 --------------------
 
-Like the external source, the boundary source terms ``boundary_x`` and ``boundary_y``, 
+Like the external source, the boundary source terms ``boundary_x`` and ``boundary_y``,
 are passed inside the ``SourceData`` object. The boundary source requires at least 2 values
-for each boundary term (e.g. [x(0), x(X)]). The boundary sources are able to be space- 
+for each boundary term (e.g. [x(0), x(X)]). The boundary sources are able to be space-
 (for 2D), angle-, energy-, and time-dependent. The minimum broadcasting shapes are shown
 in the table below. Figures showing the locations of the boundary sources are also included.
 
@@ -146,7 +146,7 @@ in the table below. Figures showing the locations of the boundary sources are al
 
 .. container:: clickable-tikz
 
-    .. tikz:: 
+    .. tikz::
         :libs: positioning,arrows.meta
         :include: tikz/boundary-1d.tikz
         :xscale: 100
@@ -155,7 +155,7 @@ in the table below. Figures showing the locations of the boundary sources are al
 
 .. container:: clickable-tikz
 
-    .. tikz:: 
+    .. tikz::
         :libs: positioning,arrows.meta
         :include: tikz/boundary-2d.tikz
         :xscale: 100
@@ -164,7 +164,7 @@ in the table below. Figures showing the locations of the boundary sources are al
 
 .. container:: clickable-tikz
 
-    .. tikz:: 
+    .. tikz::
         :libs: positioning,arrows.meta
         :include: tikz/boundary-3d.tikz
         :xscale: 100
@@ -178,4 +178,3 @@ For initial flux shapes (time-dependent problems), see :doc:`time-dependent-inpu
 
 .. raw:: html
     :file: ../functions/tikz-click-handler.html
-

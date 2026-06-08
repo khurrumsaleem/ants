@@ -1,13 +1,13 @@
 .. raw:: html
    :file: ants-logo.html
-   
+
 
 A Neutron Transport Solver (ANTS)
 ===========================================
 
-A Neutron Transport Solution (ANTS) calculates the neutron flux for both criticality and 
-fixed source problems of one dimensional slabs and spheres and two dimensional slabs using 
-the discrete ordinates method. It looks to combine machine learning with collision based 
+A Neutron Transport Solution (ANTS) calculates the neutron flux for both criticality and
+fixed source problems of one dimensional slabs and spheres and two dimensional slabs using
+the discrete ordinates method. It looks to combine machine learning with collision based
 hybrid methods and speedup using Cython.
 
 .. toctree::

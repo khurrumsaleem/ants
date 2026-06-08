@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var img = container.querySelector('img');
         if (img && img.src) {
             var link = document.createElement('a');
-            link.href = img.src; 
+            link.href = img.src;
             link.target = '_blank';
             img.parentNode.insertBefore(link, img);
             link.appendChild(img);
