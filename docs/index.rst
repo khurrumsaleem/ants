@@ -11,7 +11,7 @@ the discrete ordinates method. It looks to combine machine learning with collisi
 hybrid methods and speedup using Cython.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :numbered:
 
    Running ANTS <running-ants/index>
