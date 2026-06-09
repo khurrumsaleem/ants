@@ -21,3 +21,5 @@ hybrid methods and speedup using Cython.
    Collision-Based Hybrid Method <hybrid-method/index>
 
    Method of Nearby Problems <nearby-problems/index>
+
+   References <references>
