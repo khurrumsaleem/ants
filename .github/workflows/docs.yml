@@ -22,7 +22,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install .
-          python -m pip install sphinx sphinxcontrib-bibtex
+          python -m pip install sphinx sphinxcontrib-bibtex sphinxcontrib-tikz
 
       - name: Build docs with warnings as errors
         run: make -C docs html SPHINXOPTS="-W"
