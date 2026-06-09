@@ -50,7 +50,9 @@ SourceData
 -----------
 
 Holds initial conditions, external source, and boundary conditions. The
-required fields depend on the problem type and time integrator.
+required fields depend on the problem type and time integrator. The inline shapes
+below are illustrative — see :doc:`standard-inputs` for the authoritative
+broadcast-shape rules of ``external``, ``boundary_x``, and ``boundary_y``.
 
 **Fixed source / criticality (1D):**
 
@@ -90,7 +92,8 @@ each time integrator.
 GeometryData
 -------------
 
-Describes the spatial grid, material layout, and geometry type.
+Describes the spatial grid, material layout, and geometry type. See
+:doc:`standard-inputs` for the ``medium_map``, ``delta_x``/``delta_y`` array shapes.
 
 .. code-block:: python
 

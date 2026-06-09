@@ -62,11 +62,12 @@ and returned as a ``QuadratureData`` object:
 External Source Data
 --------------------
 
-External sources (``external``) are passed inside a ``SourceData`` object. The external
-source can be angular, energy, and time dependent. Arrays are broadcast automatically
-along dimensions of size 1, so it is not necessary to match the full shape if is is an
-angle-,  energy-, or time-dependent source. The minimum broadcasting shapes for 1D and 2D
-problems are provided below.
+External sources (``external``) are passed inside a ``SourceData`` object, alongside the
+boundary sources described below. The external source can be angular, energy, and time
+dependent. Arrays are broadcast automatically along dimensions of size 1, so it is not
+necessary to match the full shape if it is an angle-, energy-, or time-dependent source.
+The minimum broadcasting shapes for 1D and 2D problems are provided below; these tables
+are the authoritative reference for source array shapes.
 
 **External Source Shapes:**
 
@@ -123,7 +124,7 @@ in the table below. Figures showing the locations of the boundary sources are al
    * - 1 / ``boundary_x``
      - Time-Dependent
      - ``(1, 2, 1, 1)``
-     - ``(T, I, N, G)``
+     - ``(T, 2, N, G)``
    * - 2 / ``boundary_x``
      - Fixed/Critical
      - ``(2, 1, 1, 1)``
@@ -140,6 +141,20 @@ in the table below. Figures showing the locations of the boundary sources are al
      - Time-Dependent
      - ``(1, 2, 1, 1, 1)``
      - ``(T, 2, I, N**2, G)``
+
+
+The time axis of a time-dependent source rarely needs to be built by hand. ANTS provides
+helpers that expand a steady source over the time grid:
+
+* ``ants.external1d.time_dependence_constant`` — repeat a steady external source across
+  all steps (adds the leading ``T`` dimension).
+* ``ants.boundary1d.time_dependence_constant``,
+  ``ants.boundary1d.time_dependence_decay_01`` / ``_02`` — constant or decaying 1D
+  boundary sources.
+* ``ants.boundary2d.time_dependence_decay_01`` / ``_02`` / ``_03`` — decaying 2D
+  boundary sources.
+
+See :doc:`time-dependent-inputs` for time-stepping details and the initial-flux shapes.
 
 
 **One-Dimensional Boundary Source**
