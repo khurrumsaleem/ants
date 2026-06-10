@@ -5,7 +5,7 @@
 [![Style](https://img.shields.io/github/actions/workflow/status/bwhewe-13/ants/ci.yml?label=Style)](https://github.com/bwhewe-13/ants/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/github/actions/workflow/status/bwhewe-13/ants/tests.yml?label=Tests)](https://github.com/bwhewe-13/ants/actions/workflows/tests.yml)
 [![Coverage](https://codecov.io/gh/bwhewe-13/ants/graph/badge.svg)](https://codecov.io/gh/bwhewe-13/ants)
-[![Docs](https://img.shields.io/github/actions/workflow/status/bwhewe-13/ants/docs.yml?label=Docs)](https://github.com/bwhewe-13/ants/actions/workflows/docs.yml)
+[![Docs](https://img.shields.io/github/actions/workflow/status/bwhewe-13/ants/docs.yml?label=Docs)](https://bwhewe-13.github.io/ants/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 A Neutron Transport Solution (ANTS) calculates the neutron flux for both criticality and fixed source problems of one dimensional slabs and spheres and two dimensional slabs using the discrete ordinates method and written in Cython.

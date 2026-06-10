@@ -28,6 +28,12 @@ dev = [
     "flake8",
     "pre-commit",
 ]
+docs = [
+    "sphinx",
+    "sphinxcontrib-bibtex",
+    "sphinxcontrib-tikz",
+    "pydata-sphinx-theme",
+]
 
 [tool.setuptools.packages]
 find = {}

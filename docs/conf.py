@@ -107,10 +107,18 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "agogo"
+html_theme = "pydata_sphinx_theme"
 html_theme_options = {
-    "body_max_width": "none",
-    "rightsidebar": False,
+    "icon_links": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/bwhewe-13/ants",
+            "icon": "fa-brands fa-github",
+        },
+    ],
+    "navbar_end": ["theme-switcher", "navbar-icon-links"],
+    "show_toc_level": 2,
+    "collapse_navigation": False,
 }
 
 
