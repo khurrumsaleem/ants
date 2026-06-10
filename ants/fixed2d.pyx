@@ -26,7 +26,7 @@ from ants cimport multi_group_2d as mg
 from ants cimport parameters
 
 from ants.datatypes import MultigroupSolver, create_params
-from ants.main import artificial_scatter_matrix
+from ants.quadrature import artificial_scatter_matrix
 
 
 def fixed_source(materials, sources, geometry, quadrature, solver):
